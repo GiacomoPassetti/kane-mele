@@ -7,6 +7,8 @@ v2 = a*np.array([np.sqrt(3)/2, -3/2])
 rA = a*[0, 0.5]
 rB = a*[0, -0.5]
 
+
+
 def I_J_conv(i, j, n):
     return int((n*i)+j)
 
@@ -109,15 +111,10 @@ def Hamiltonian_generator(n1, n2, t, t_so, b_0):
             _=0
 
     H = H + H.transpose().conj()
-    
+    assert np.allclose(H, H.conj().T)
     return H 
 
 
-n1 = 2
-n2 = n1
-H = Hamiltonian_generator(n1, n2, 1, 2, 1)
-assert np.allclose(H, H.conj().T)
-print(H, np.min(H))
 
 
 
