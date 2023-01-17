@@ -25,7 +25,7 @@ b_0 = 0.1
 H = Hamiltonian_generator(n1, n2, t, t_so, b_0)
 u, v = eigh(H)
 
-ground_state = v[:, 5]
+ground_state = v[:, int(u.shape[0]/2)]
 
 
 atom_positions = atom_positions_generator(v1, v2, n1, n2, rA, rB)
@@ -37,11 +37,13 @@ indeces_labels = np.column_stack(np.where(Labels==1))
 xs = atom_positions[:, 0]
 ys = atom_positions[:, 1]
 fig, ax = plt.subplots()
-cmap = matplotlib.cm.get_cmap('viridis')
+cmap = matplotlib.cm.get_cmap('binary')
 
 print(ground_state.shape[0], xs.shape[0])
 for i in range(xs.shape[0]):
-    print(np.abs(ground_state[i]))
-    ax.plot(xs[i], ys[i], color = cmap(np.abs(ground_state[2*i])), marker = "o", ls = "")
+    print("local site occupation: ", (np.abs(ground_state[2*i])**2)+(np.abs(ground_state[2*i + 1])**2))
+    ax.plot(xs[i], ys[i], color = cmap(((np.abs(ground_state[2*i])**2)+(np.abs(ground_state[2*i + 1])**2))*10), marker = "o", ls = "")
+ax.set_aspect("equal")
+
 
 plt.show()

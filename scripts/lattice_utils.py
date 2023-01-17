@@ -43,8 +43,8 @@ def Hamiltonian_generator(n1, n2, t, t_so, b_0):
         H[4*i+ 1, 4*i+3] = -t
 
         # Magnetic Field Term
-        H[4*i, 4*i + 1] = -(1j/2)*b_0 
-        H[4*i+2, 4*i + 3] = -(1j/2)*b_0 
+        H[4*i, 4*i + 1] = -1j*b_0 
+        H[4*i+2, 4*i + 3] = -1j*b_0 
         
         try:  # Top Right Next Cell
           if Labels[tuple(indeces_labels[i]+ np.array([1, 0]))]==1:
