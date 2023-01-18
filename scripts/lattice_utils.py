@@ -12,6 +12,18 @@ rB = a*[0, -0.5]
 def I_J_conv(i, j, n):
     return int((n*i)+j)
 
+def Circle_label_generator(a1, a2, n1, n2, r):
+    x_0 = ((n1*a1[0])+(n2*a2[0]))/2
+    y_0 = 0
+    Labels = np.ones(shape=(n1, n2))
+    for i in range(Labels.shape[0]):
+        for j in range(Labels.shape[1]):
+            x = (i*a1[0]) + (j*a2[0])
+            y = (i*a1[1]) + (j*a2[1])
+            if np.sqrt(((x-x_0)**2) + ((y-y_0)**2)) > r:
+                Labels[i, j] = 0
+    return Labels
+
 def atom_positions_generator(a1, a2, n1, n2, rA, rB):
     positions_array = np.zeros(shape = (n1,n2, 2))
     for i in range(n1):
@@ -122,12 +134,13 @@ def Hamiltonian_boundaries_generator(n1, n2, t, t_so, b_0, Labels):
     
     for i in range(indeces_labels.shape[0]):
         # Intra-cell Hopping terms
-        H[4*i, 4*i+2] = -t 
-        H[4*i+ 1, 4*i+3] = -t
-
-        # Magnetic Field Term
-        H[4*i, 4*i + 1] = -1j*b_0 
-        H[4*i+2, 4*i + 3] = -1j*b_0 
+        if Labels[tuple(indeces_labels[i])] == 1: 
+              H[4*i, 4*i+2] = -t 
+              H[4*i+ 1, 4*i+3] = -t
+      
+              # Magnetic Field Term
+              H[4*i, 4*i + 1] = -1j*b_0 
+              H[4*i+2, 4*i + 3] = -1j*b_0 
         
         try:  # Top Right Next Cell
           if Labels[tuple(indeces_labels[i]+ np.array([1, 0]))]==1:
