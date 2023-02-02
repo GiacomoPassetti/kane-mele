@@ -27,12 +27,10 @@ def rectangular_label_generator(a1, a2, n1, n2, l1, l2):
     Labels = np.zeros(shape=(n1, n2))
     for i in range(Labels.shape[0]):
         for j in range(Labels.shape[1]):
-            print("at couple i j",i, j ,":  x=",x, "cond1 = ", x < ((l1/2)+x_0) and x > ((l1/2)-x_0)  )
             x = (i*a1[0]) + (j*a2[0])
             y = (i*a1[1]) + (j*a2[1])
-            if x < ((l1/2)+x_0) and x > ((l1/2)-x_0):
-                if   y < ((l2/2)+y_0) and y > ((l2/2)-y_0):
-                   Labels[i, j] = 1
+            if x < ((l1/2)+x_0) and x > ((l1/2)-x_0) and y < ((l2/2)+y_0) and y > ((l2/2)-y_0):
+                Labels[i, j] = 1
     return Labels
 
 def Circle_label_generator(a1, a2, n1, n2, r):
