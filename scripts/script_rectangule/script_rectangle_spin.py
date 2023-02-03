@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from lattice_utils import Hamiltonian_generator, I_J_conv, atom_positions_generator, Hamiltonian_boundaries_generator, Circle_label_generator, atom_position_IJ
+from lattice_utils import Hamiltonian_generator, I_J_conv, atom_positions_generator, Hamiltonian_boundaries_generator, Circle_label_generator,rectangular_label_generator , atom_position_IJ
 from numpy.linalg import eigh
 import matplotlib
 from matplotlib import gridspec
@@ -16,13 +16,14 @@ v2 = a*np.array([np.sqrt(3)/2, -3/2])
 rA = a*[0, 0.5]
 rB = a*[0, -0.5]
 
-n1 = 16
+n1 = 36
 n2 = n1
 
 t = 1
 t_so = 0.1
 b_0 = 0.2
-
+l1 = 48
+l2 = l1
 
 
 
@@ -31,10 +32,12 @@ Atom_Labels = np.ones(shape=(n1, n2))
 indeces_labels = np.column_stack(np.where(Atom_Labels==1))
 
 
-Labels = np.ones(shape=(n1, n2))
+Labels = rectangular_label_generator(v1, v2, n1, n2, l1, l2)
+print(Labels)
 H, indeces_labels = Hamiltonian_boundaries_generator(n1, n2, t, t_so, b_0, Labels)
+
 u, v = eigh(H)
-index_of_state = int(u.shape[0]/2) 
+index_of_state = int(u.shape[0]/2) - 4
 selected_state = v[:,index_of_state]
 
 fig = plt.figure(figsize=(7, 7), dpi = 800) 
@@ -57,6 +60,7 @@ cb1 = mpl.colorbar.ColorbarBase(ax_colorbar, cmap=cmap,
                                 orientation='horizontal')
 cb1.set_label('P_occupation*10')
 
+
 for i in range(indeces_labels.shape[0]):
     
     coordA, coordB = atom_position_IJ(v1, v2, indeces_labels[i, 0], indeces_labels[i, 1], rA, rB)
@@ -72,4 +76,4 @@ ax_energy.set_ylabel("E[t]")
 ax.set_xticks([])
 ax.set_yticks([])
 import os
-plt.savefig(os.path.join("plots/occupation", "energy_occupation_n1_"+str(n1)+"_n2_"+str(n2)+".png"))
+plt.savefig(os.path.join("plots", "Second_attempt_energy_occupation_n1_"+str(n1)+"_n2_"+str(n2)+"l1_"+str(l1)+"l2_"+str(l2)+".png"))

@@ -179,9 +179,9 @@ def Hamiltonian_boundaries_generator(n1, n2, t, t_so, b_0, Labels):
              
              # Next-nearest Neighbour hoppings
              H[4*i, 4*j+1] = 1j*t_so   # Particle A_up hops to A_down
-             H[4*i + 1, 4*j] = 1j*t_so  # Particle A_down hops to A_up
+             H[4*i + 1, 4*j] = -1j*t_so  # Particle A_down hops to A_up
              H[4*i+2, 4*j+3] = -1j*t_so   # Particle B_up hops to B_down
-             H[4*i + 3, 4*j + 2] = -1j*t_so  # Particle B_down hops to B_up
+             H[4*i + 3, 4*j + 2] = +1j*t_so  # Particle B_down hops to B_up
 
 
         except:
@@ -195,9 +195,9 @@ def Hamiltonian_boundaries_generator(n1, n2, t, t_so, b_0, Labels):
 
              # Next-nearest Neighbour hoppings
              H[4*i, 4*j+1] = 1j*t_so   # Particle A_up hops to A_down
-             H[4*i + 1, 4*j] = 1j*t_so  # Particle A_down hops to A_up
+             H[4*i + 1, 4*j] = -1j*t_so  # Particle A_down hops to A_up
              H[4*i+2, 4*j+3] = -1j*t_so   # Particle B_up hops to B_down
-             H[4*i + 3, 4*j + 2] = -1j*t_so  # Particle B_down hops to B_up
+             H[4*i + 3, 4*j + 2] = +1j*t_so  # Particle B_down hops to B_up
 
         except:
             _=0
@@ -211,9 +211,9 @@ def Hamiltonian_boundaries_generator(n1, n2, t, t_so, b_0, Labels):
 
              # Next-nearest Neighbour hoppings
              H[4*i, 4*j+1] = -1j*t_so   # Particle A_up hops to A_down
-             H[4*i + 1, 4*j] = -1j*t_so  # Particle A_down hops to A_up
+             H[4*i + 1, 4*j] = 1j*t_so  # Particle A_down hops to A_up
              H[4*i+2, 4*j+3] = 1j*t_so   # Particle B_up hops to B_down
-             H[4*i + 3, 4*j + 2] = 1j*t_so  # Particle B_down hops to B_up
+             H[4*i + 3, 4*j + 2] = -1j*t_so  # Particle B_down hops to B_up
         except:
             _=0
         try: # Bottom Left Next cell 
@@ -226,9 +226,9 @@ def Hamiltonian_boundaries_generator(n1, n2, t, t_so, b_0, Labels):
 
              # Next-nearest Neighbour hoppings
              H[4*i, 4*j+1] = -1j*t_so   # Particle A_up hops to A_down
-             H[4*i + 1, 4*j] = -1j*t_so  # Particle A_down hops to A_up
+             H[4*i + 1, 4*j] = 1j*t_so  # Particle A_down hops to A_up
              H[4*i+2, 4*j+3] = 1j*t_so   # Particle B_up hops to B_down
-             H[4*i + 3, 4*j + 2] = 1j*t_so  # Particle B_down hops to B_up
+             H[4*i + 3, 4*j + 2] = -1j*t_so  # Particle B_down hops to B_up
 
         except:
             _=0

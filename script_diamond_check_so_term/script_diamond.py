@@ -16,7 +16,7 @@ v2 = a*np.array([np.sqrt(3)/2, -3/2])
 rA = a*[0, 0.5]
 rB = a*[0, -0.5]
 
-n1 = 16
+n1 = 24
 n2 = n1
 
 t = 1
@@ -72,4 +72,4 @@ ax_energy.set_ylabel("E[t]")
 ax.set_xticks([])
 ax.set_yticks([])
 import os
-plt.savefig(os.path.join("plots/occupation", "energy_occupation_n1_"+str(n1)+"_n2_"+str(n2)+".png"))
+plt.savefig(os.path.join("plots", "energy_occupation_n1_"+str(n1)+"_n2_"+str(n2)+".png"))
