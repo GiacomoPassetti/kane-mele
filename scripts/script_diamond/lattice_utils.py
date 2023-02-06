@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.linalg as alg
 a = 1
 v1 = a*np.array([np.sqrt(3)/2, 3/2])
 v2 = a*np.array([np.sqrt(3)/2, -3/2])
@@ -236,6 +237,120 @@ def Hamiltonian_boundaries_generator(n1, n2, t, t_so, b_0, Labels):
     H = H + H.transpose().conj()
     assert np.allclose(H, H.conj().T)
     return H, indeces_labels
+
+
+def Hamiltonian_impurities(n1, n2, t, t_so, b_0, V_0, Labels):
+    number_of_states = n1*n2*4
+    
+    indeces_labels = np.column_stack(np.where(Labels==1))
+    
+    H = np.zeros(shape=(indeces_labels.shape[0]*4, indeces_labels.shape[0]*4), dtype=complex)
+
+    cell_s_x = np.array([[0, 1, 0, 0],[1, 0, 0, 0],[0, 0, 0, 1],[0, 0, 1, 0]])
+    cell_sigma_z = np.array([[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, -1, 0],[0, 0, 0, -1]])
+    
+    
+    arrays = [cell_s_x.dot(cell_sigma_z)]*indeces_labels.shape[0]
+    S_operator = V_0*alg.block_diag(*arrays)
+    H = H + S_operator
+    for i in range(indeces_labels.shape[0]):
+        # Intra-cell Hopping terms
+       
+        H[4*i, 4*i+2] = -t 
+        H[4*i+ 1, 4*i+3] = -t
+
+        # Magnetic Field Term
+        H[4*i, 4*i + 1] = -1j*b_0 
+        H[4*i+2, 4*i + 3] = -1j*b_0 
+        
+        try:  # Top Right Next Cell
+          if Labels[tuple(indeces_labels[i]+ np.array([1, 0]))]==1:
+             new_lab = indeces_labels[i]+ np.array([1, 0])
+             j = slow_I_J_conv(new_lab[0], new_lab[1], indeces_labels)
+            
+             # Nearest Neighbour hoppings
+             H[4*i, 4*j+2] = -t   # Particle A_up hops to B_up
+             H[4*i + 1, 4*j+3] = -t  # Particle A_down hops to B_down
+             
+             # Next-nearest Neighbour hoppings
+             H[4*i, 4*j+1] = 1j*t_so   # Particle A_up hops to A_down
+             H[4*i + 1, 4*j] = 1j*t_so  # Particle A_down hops to A_up
+             H[4*i+2, 4*j+3] = -1j*t_so   # Particle B_up hops to B_down
+             H[4*i + 3, 4*j + 2] = -1j*t_so  # Particle B_down hops to B_up
+
+
+        except:
+            _=0
+        try:  # Bottom right Next Cell
+          if Labels[tuple(indeces_labels[i]+ np.array([0, 1]))]==1:
+             new_lab = indeces_labels[i]+ np.array([0, 1])
+             j = slow_I_J_conv(new_lab[0], new_lab[1], indeces_labels)
+             H[4*i+2, 4*j] = -t   # Particle B_up hops to A_up
+             H[4*i + 3, 4*j+1] = -t  # Particle B_down hops to A_down
+
+             # Next-nearest Neighbour hoppings
+             H[4*i, 4*j+1] = 1j*t_so   # Particle A_up hops to A_down
+             H[4*i + 1, 4*j] = 1j*t_so  # Particle A_down hops to A_up
+             H[4*i+2, 4*j+3] = -1j*t_so   # Particle B_up hops to B_down
+             H[4*i + 3, 4*j + 2] = -1j*t_so  # Particle B_down hops to B_up
+
+        except:
+            _=0
+        try: # Top Left Next cell
+          if (indeces_labels[i]- np.array([0, 1])[0] >= 0) and (indeces_labels[i] - np.array([0, 1])[1] >= 0):
+           if Labels[tuple(indeces_labels[i]- np.array([0, 1]))]==1:
+             new_lab = indeces_labels[i]- np.array([0, 1])
+             j = slow_I_J_conv(new_lab[0], new_lab[1], indeces_labels)
+             H[4*i, 4*j+2] = -t   # Particle A_up hops to B_up
+             H[4*i + 1, 4*j+3] = -t  # Particle A_down hops to B_down
+
+             # Next-nearest Neighbour hoppings
+             H[4*i, 4*j+1] = -1j*t_so   # Particle A_up hops to A_down
+             H[4*i + 1, 4*j] = -1j*t_so  # Particle A_down hops to A_up
+             H[4*i+2, 4*j+3] = 1j*t_so   # Particle B_up hops to B_down
+             H[4*i + 3, 4*j + 2] = 1j*t_so  # Particle B_down hops to B_up
+        except:
+            _=0
+        try: # Bottom Left Next cell 
+          if (indeces_labels[i]- np.array([1, 0])[0] >= 0) and (indeces_labels[i] - np.array([1, 0])[1] >= 0):
+           if Labels[tuple(indeces_labels[i]- np.array([1, 0]))]==1:
+             new_lab = indeces_labels[i]- np.array([1, 0])
+             j = slow_I_J_conv(new_lab[0], new_lab[1], indeces_labels)
+             H[4*i+2, 4*j] = -t   # Particle B_up hops to A_up
+             H[4*i + 3, 4*j+1] = -t  # Particle B_down hops to A_down
+
+             # Next-nearest Neighbour hoppings
+             H[4*i, 4*j+1] = -1j*t_so   # Particle A_up hops to A_down
+             H[4*i + 1, 4*j] = -1j*t_so  # Particle A_down hops to A_up
+             H[4*i+2, 4*j+3] = 1j*t_so   # Particle B_up hops to B_down
+             H[4*i + 3, 4*j + 2] = 1j*t_so  # Particle B_down hops to B_up
+
+        except:
+            _=0
+
+    H = H + H.transpose().conj()
+    assert np.allclose(H, H.conj().T)
+    return H, indeces_labels
+
+s_z = np.array([[1, 0], [0, -1]])
+s_x = np.array([[0, 1], [1, 0]])
+ID = np.array([[1, 0],[0, 1]])
+
+cell_s_x = np.array([[0, 1, 0, 0],[1, 0, 0, 0],[0, 0, 0, 1],[0, 0, 1, 0]])
+cell_sigma_z = np.array([[1, 0, 0, 0],[0, 1, 0, 0],[0, 0, -1, 0],[0, 0, 0, -1]])
+
+size = 2
+arrays = [cell_s_x.dot(cell_sigma_z)]*size
+print(alg.block_diag(*arrays))
+
+
+
+
+
+
+
+
+
 
 
 
