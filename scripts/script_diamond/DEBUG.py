@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from lattice_utils import Hamiltonian_generator, I_J_conv, atom_positions_generator, Hamiltonian_boundaries_generator, Circle_label_generator, atom_position_IJ, Hamiltonian_impurities
+from lattice_utils import Hamiltonian_generator, I_J_conv, atom_positions_generator, Hamiltonian_boundaries_generator, Circle_label_generator, atom_position_IJ, Hamiltonian_impurities, Hamiltonian_impurities_DEBUG
 from numpy.linalg import eigh
 import matplotlib
 from matplotlib import gridspec
@@ -22,7 +22,7 @@ n2 = n1
 t = 1
 t_so = 0.1
 b_0 = 0.2
-V_0 = 1
+V_0 = 0.001
 
 sigma_x = np.array([[0, 1], [1, 0]])
 
@@ -32,11 +32,13 @@ indeces_labels = np.column_stack(np.where(Atom_Labels==1))
 
 
 Labels = np.ones(shape=(n1, n2))
-H, indeces_labels = Hamiltonian_impurities(n1, n2, t, t_so, b_0, V_0, Labels)
+H, indeces_labels = Hamiltonian_impurities_DEBUG(n1, n2, t, t_so, b_0, V_0, Labels)
 u, v = eigh(H)
-index_of_state = int(u.shape[0]/2) 
+index_of_state = int(u.shape[0]/2) - 1
 selected_state = v[:,index_of_state]
 
+
+print("E1 = ", u[index_of_state-1], "E2 = ", u[index_of_state])
 fig = plt.figure(figsize=(7, 7), dpi = 800) 
 nrow = 2
 ncol = 3
@@ -47,7 +49,7 @@ ax = plt.subplot(gs[0, 2])
 ax_energy = plt.subplot(gs[0, 0])
 ax_colorbar = plt.subplot(gs[1, 2])
 
-index_of_state = int(u.shape[0]/2) 
+
 
 cmap = matplotlib.cm.get_cmap('RdYlBu')
 norm = mpl.colors.Normalize(vmin=-1, vmax=1)
@@ -83,7 +85,7 @@ ax.text(1, n1*1.4, "$V_0 = $"+str(V_0))
 ax.text(1, n1*1.2, "$E = $"+"{:.5f}".format(u[index_of_state]))
 
 import os
-plt.savefig(os.path.join("plots/spin_impurity", "impurity_s_x_component_n1_"+str(n1)+"_n2_"+str(n2)+"V_0"+str(V_0)+".png"))
+plt.savefig(os.path.join("plots/DEBUG", "impurity_s_x_component_n1_"+str(n1)+"_n2_"+str(n2)+"V_0"+str(V_0)+"index_of_state"+str(index_of_state)+".png"))
 
 plt.close()
 
@@ -97,7 +99,7 @@ ax = plt.subplot(gs[0, 2])
 ax_energy = plt.subplot(gs[0, 0])
 ax_colorbar = plt.subplot(gs[1, 2])
 
-index_of_state = int(u.shape[0]/2) 
+
 
 cmap = matplotlib.cm.get_cmap('OrRd')
 norm = mpl.colors.Normalize(vmin=0, vmax=1)
@@ -123,4 +125,4 @@ ax.set_xticks([])
 ax.set_yticks([])
 ax.text(1, n1*1.4, "$V_0 = $"+str(V_0))
 ax.text(1, n1*1.2, "$E = $"+"{:.5f}".format(u[index_of_state]))
-plt.savefig(os.path.join("plots/occupation_impurity", "impurity_energy_occupation_n1_"+str(n1)+"_n2_"+str(n2)+"V_0"+str(V_0)+".png"))
+plt.savefig(os.path.join("plots/DEBUG", "impurity_energy_occupation_n1_"+str(n1)+"_n2_"+str(n2)+"V_0"+str(V_0)+"index_of_state"+str(index_of_state)+".png"))

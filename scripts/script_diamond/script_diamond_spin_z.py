@@ -55,7 +55,7 @@ norm = mpl.colors.Normalize(vmin=-1, vmax=1)
 cb1 = mpl.colorbar.ColorbarBase(ax_colorbar, cmap=cmap,
                                 norm=norm,
                                 orientation='horizontal')
-cb1.set_label(r'$\sigma_z$')
+cb1.set_label(r'$s_z$')
 
 for i in range(indeces_labels.shape[0]):
     
